@@ -8,7 +8,7 @@ using namespace std;
 struct estudiante{
     unsigned long long codigo;
     unsigned long long fecha;
-    unsigned long long doc;
+    unsigned long long doc;  
     char nombre[150];
     string nombre1;
     estudiante *izq;
@@ -149,4 +149,35 @@ void registro2(){
 
 void buscar(){}
 void mostrar(){}
-void adjust(){}
+void adjust(){} 
+
+void Inorder(estudiante *root);
+void Preorder(estudiante *root);
+void Postorder(estudiante *root);
+void eliminar(unsigned long long codigo);
+
+void Inorder(estudiante *root) {
+    if (root != NULL) {
+        Inorder(root->izq);
+        cout << "Codigo: " << root->codigo << ", Nombre: " << root->nombre << endl;
+        Inorder(root->derec);
+    }
+}
+
+void Preorder(estudiante *root) {
+    if (root != NULL) {
+        cout << "Codigo: " << root->codigo << ", Nombre: " << root->nombre << endl;
+        Preorder(root->izq);
+        Preorder(root->derec);
+    }
+}
+
+void Postorder(estudiante *root) {
+    if (root != NULL) {
+        Postorder(root->izq);
+        Postorder(root->derec);
+        cout << "Codigo: " << root->codigo << ", Nombre: " << root->nombre << endl;
+    }
+} 
+
+void eliminar (){} 
