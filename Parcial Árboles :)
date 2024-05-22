@@ -2,13 +2,11 @@
 #include <string>
 #include <stdlib.h>
 
-//ruben camacho, pedro manyoma.
-
 using namespace std;
 
 struct Estudiante {
     unsigned long long codigo;
-    unsigned long long fecha;
+    unsigned long long fecha; 
     unsigned long long doc;
     unsigned long long genero;
     char nombre[150];
@@ -19,11 +17,13 @@ struct Estudiante {
 void registro();
 void mostrar();
 void contarGenero(int &masculino, int &femenino, int &no_responde);
+void contarGeneroRec(Estudiante *root, int &masculino, int &femenino, int &no_responde);
 void Inorder(Estudiante *root);
 void Preorder(Estudiante *root);
 void Postorder(Estudiante *root);
 void eliminar(unsigned long long codigo);
 Estudiante* eliminarNodo(Estudiante* root, unsigned long long codigo);
+Estudiante* minValorNodo(Estudiante* node);
 
 int main() {
     system("cls");
@@ -67,58 +67,6 @@ int main() {
     return 0;
 }
 
-void mostrar() {
-    cout << "Mostrando listado de estudiantes:" << endl;
-    cout << "------------------------------" << endl;
-    Inorder(raiz);
-    system("pause");
-    system("cls");
-}
-
-void contarGenero(int &masculino, int &femenino, int &no_responde) {
-    if (raiz != NULL) {
-        Estudiante *actual = raiz;
-        contarGeneroRec(actual, masculino, femenino, no_responde);
-    }
-}
-
-void contarGeneroRec(Estudiante *root, int &masculino, int &femenino, int &no_responde) {
-    if (root != NULL) {
-        contarGeneroRec(root->izq, masculino, femenino, no_responde);
-        if (root->genero == 1)
-            masculino++;
-        else if (root->genero == 2)
-            femenino++;
-        else if (root->genero == 3)
-            no_responde++;
-        contarGeneroRec(root->derec, masculino, femenino, no_responde);
-    }
-}
-
-void Inorder(Estudiante *root) {
-    if (root != NULL) {
-        Inorder(root->izq);
-        cout << "Código: " << root->codigo << ", Nombre: " << root->nombre << ", Género: " << root->genero << endl;
-        Inorder(root->derec);
-    }
-}
-
-void Preorder(Estudiante *root) {
-    if (root != NULL) {
-        cout << "Código: " << root->codigo << ", Nombre: " << root->nombre << ", Género: " << root->genero << endl;
-        Preorder(root->izq);
-        Preorder(root->derec);
-    }
-}
-
-void Postorder(Estudiante *root) {
-    if (root != NULL) {
-        Postorder(root->izq);
-        Postorder(root->derec);
-        cout << "Código: " << root->codigo << ", Nombre: " << root->nombre << ", Género: " << root->genero << endl;
-    }
-}
-
 void registro() {
     Estudiante *nuevo = new Estudiante;
     cout << "Ingrese el código del estudiante: ";
@@ -156,30 +104,51 @@ void registro() {
     system("cls");
 }
 
-Estudiante* eliminarNodo(Estudiante* root, unsigned long long codigo) {
-    if (root == NULL) return root;
+void mostrar() {
+    cout << "Mostrando listado de estudiantes:" << endl;
+    cout << "------------------------------" << endl;
+    Inorder(raiz);
+    system("pause");
+    system("cls");
+}
 
-    if (codigo < root->codigo)
-        root->izq = eliminarNodo(root->izq, codigo);
-    else if (codigo > root->codigo)
-        root->derec = eliminarNodo(root->derec, codigo);
-    else {
-        if (root->izq == NULL) {
-            Estudiante *temp = root->derec;
-            delete root;
-            return temp;
-        } else if (root->derec == NULL) {
-            Estudiante *temp = root->izq;
-            delete root;
-            return temp;
-        }
-        Estudiante* temp = minValorNodo(root->derec);
-        root->codigo = temp->codigo;
-        strcpy(root->nombre, temp->nombre);
-        root->fecha = temp->fecha;
-        root->doc = temp->doc;
-        root->genero = temp->genero;
-        root->derec = eliminarNodo(root->derec, temp->codigo);
-    }
-    return;
+void contarGenero(int &masculino, int &femenino, int &no_responde) {
+    contarGeneroRec(raiz, masculino, femenino, no_responde);
+}
+
+void contarGeneroRec(Estudiante *root, int &masculino, int &femenino, int &no_responde) {
+    if (root != NULL) {
+        contarGeneroRec(root->izq, masculino, femenino, no_responde);
+        if (root->genero == 1)
+            masculino++;
+        else if (root->genero == 2)
+            femenino++;
+        else if (root->genero == 3)
+            no_responde++;
+        contarGeneroRec(root->derec, masculino, femenino, no_responde);
+    }
+}
+
+void Inorder(Estudiante *root) {
+    if (root != NULL) {
+        Inorder(root->izq);
+        cout << "Código: " << root->codigo << ", Nombre: " << root->nombre << ", Género: " << root->genero << endl;
+        Inorder(root->derec);
+    }
+}
+
+void Preorder(Estudiante *root) {
+    if (root != NULL) {
+        cout << "Código: " << root->codigo << ", Nombre: " << root->nombre << ", Género: " << root->genero << endl;
+        Preorder(root->izq);
+        Preorder(root->derec);
+    }
+}
+
+void Postorder(Estudiante *root) {
+    if (root != NULL) {
+        Postorder(root->izq);
+        Postorder(root->derec);
+        cout << "Código: " << root->codigo << ", Nombre: " << root->nombre << ", Género: " << root->genero << endl;
+    }
 }
